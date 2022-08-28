@@ -136,7 +136,8 @@ getCartProducts:(userId)=>{
            {
                $project:{
                 item:'$products.item',
-                quantity:'$products.quantity'
+                quantity:'$products.quantity',
+                user:objectId(userId)
                }
            },
            {
@@ -176,7 +177,7 @@ getCartProducts:(userId)=>{
     }
 
     else{
-        resolve('No cart')
+        resolve(0)
     }
 
     })
@@ -212,6 +213,35 @@ deleteItem:(cartId,proId)=>{
 
         resolve()
     })
+
+},
+
+placeOrder:(userId,address,carts)=>{
+
+    return new Promise((resolve,reject)=>{
+
+    carts.forEach((item)=>db.get().collection(collection.ORDER).insertOne({userid:item.user,cartid:item._id,address:address,status:(address.payment==='COD'?'placed':'pending'),quantity:item.quantity,date:new Date(),product:item.product}).then((response)=>{
+        console.log(response)
+    }))
+    db.get().collection(collection.CART).deleteOne({user:objectId(userId)}).then(()=>{
+            resolve()
+          })
+            
+    })
+
+   
+},
+
+getOrders:(userId)=>{
+
+   return new Promise(async(resolve,reject)=>{
+
+
+
+  let orders=await db.get().collection(collection.ORDER).find({userid:objectId(userId)}).toArray();
+   
+    resolve(orders)
+   })
 
 }
 

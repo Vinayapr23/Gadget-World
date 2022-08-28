@@ -9,7 +9,7 @@
             if(response.status)
             {
                 let count=$('#cart-count').html()
-                count=parseInt(count)+1;
+                count=response.cartCount
                 $('#cart-count').html(count)
 
             }

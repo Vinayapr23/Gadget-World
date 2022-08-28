@@ -1,44 +1,14 @@
 <section class="h-100 gradient-custom">
   <div class="container py-5">
     <div class="row">
-      <div class="col-md-4">
-        <div class="card mb-4">
-          <div class="card-header py-3">
-            <h5 class="mb-0">Summary</h5>
-          </div>
-          <div class="card-body">
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                Products Price
-                
-                 <span>{{value}}$</span>
-                
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                Shipping
-                <span>Free</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                <div>
-                  <strong>Total amount</strong>
-                  <strong>
-                    <p class="mb-0">(including VAT)</p>
-                  </strong>
-                </div>
-                <span><strong>{{value}}$</strong></span>
-              </li>
-            </ul>
-      <a href="/checkout" class="btn btn-secondary btn-lg btn-block">Go to Checkout</a>
-          </div>
-        </div>
-      </div>
+      
 
-      <div class="col-md-8">
+      <div class="col-md-10">
 
 
         <div class="card border-0">
           <div class="card-header py-3 border">
-            <h5 class="mb-0">Cart - {{cartCount}} items</h5>
+            <h5 class="mb-0">Orders</h5>
           </div>
           {{#each products}}
 
@@ -65,13 +35,17 @@
               <div class="col-lg-5 col-md-6 mb-4 mb-lg-0 mt-5">
                 <!-- Data -->
                 <h4><strong>{{this.name}}</strong></h4>
-                <p><strong>{{this.price}}</strong></p>
-                <p>{{this.description}}</p>
-                <p></p>
+              {{/each}}
+
+              
+                <p><strong> Payment Mode: {{this.address.payment}}</strong></p>
+           
+             
+                <p><strong>Order Date:</strong> {{this.date}}</p>
                 
                 <!-- Data -->
               </div>
-              {{/each}}
+             
 
               <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
                 <!-- Quantity -->
@@ -79,10 +53,13 @@
                 <div class="form-outline">
                    <label class="form-label" for="form1">Quantity</label>
                   <input id="form1" name="quantity" value="{{this.quantity}}" 
-                    class="form-control" />
+                    class="form-control" readonly/>
                  
                 </div>
-                <a href="/remove-product/search?id={{this._id}}&proId={{this.item}}"><button class="btn btn-secondary mt-5">Remove Item</button> </a>
+                <div style="margin-top:2rem;">
+                    <p><strong >Status: </strong>{{this.status}}</p>
+                </div>
+               
               </div>
               <!-- Quantity -->
 
