@@ -14,12 +14,18 @@ const verifyLogin=(req,res,next)=>{
 }
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', async function(req, res, next) {
   
   let user=req.session.user
+  let cartCount=null
+  if(user)
+  {
+    cartCount= await userHelper.getCartCount(req.session.user._id)
+  }
+      
   productHelper.getAllProducts().then((products)=>{
   
-    res.render('index', { products, user,admin:false});
+    res.render('index', { products, user,admin:false,cartCount});
   
    }) 
   
@@ -85,24 +91,49 @@ router.get('/logout',function(req,res){
 
 router.get('/cart',verifyLogin,async(req,res)=>{
    
-
-   let product= await userHelper.getCartProducts(req.session.user._id)
-   console.log(product)
+   
+   let products= await userHelper.getCartProducts(req.session.user._id)
    let user=req.session.user
-   res.render('user/cart', {product,user})
+   let cartCount=null
+   let value=0;
+   for(var i=0;i<products.length;i++)
+   {
+       for(var j=0;j<products[i].product.length;j++)
+       {
+            value+=parseInt((products[i].product[j].price)*(products[i].quantity))
+       }
+   }
+   console.log(value)
+  if(user)
+  {
+    cartCount= await userHelper.getCartCount(req.session.user._id)
+  }
+   res.render('user/cart', {products,user,cartCount,value})
 
 });
 
 router.get('/add-to-cart/:id',verifyLogin,function(req,res){
 
-
  userHelper.addToCart(req.params.id,req.session.user._id).then((data)=>
  {
-     res.redirect('/#two')
+     //res.redirect('/#two')
+     res.json({status:true})
  })
 
 
 
+
+});
+
+router.get('/remove-product/search',function(req,res){
+  
+  console.log(req.query.id)
+ console.log(req.query.proId)
+
+ userHelper.deleteItem(req.query.id,req.query.proId).then(()=>
+ {
+      res.redirect('/cart')
+ })
 
 })
 

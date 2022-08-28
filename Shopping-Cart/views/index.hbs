@@ -20,10 +20,11 @@
     <div class="row">
 
          {{#each products}}
+         
         <div class="product-card col-md-4 align">
           <div class="product-image">
             <img src="/product-images/{{this.imagepath}}.jpg" class="product-thumb" alt="">
-             <a  href="/add-to-cart/{{this._id}}"><button class="card-btn" class="btn btn-secondary">Add to Cart</button></a>
+             <button class="card-btn" class="btn btn-secondary" onclick='addToCart("{{this._id}}")'>Add to Cart</button>
           </div>
           <div class="product-info">
             <h4 class="product-brand">{{this.name}}</h4>
@@ -38,6 +39,25 @@
     </div>
   </div>
 </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   <script>
