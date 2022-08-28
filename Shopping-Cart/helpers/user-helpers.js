@@ -55,18 +55,36 @@ doLogin:(userData)=>{
 
 
 addToCart:(proId,userId)=>{
-
+   
+    let proObj={
+        item:objectId(proId),
+        quantity:1
+    }
    return new Promise(async(resolve,reject)=>{
 
          let userCart=await db.get().collection(collection.CART).findOne({user:objectId(userId)})
-         
          if(userCart)
-         {
+         {    
+              let proExist=userCart.products.findIndex(product=>product.item==proId)
+              console.log(proExist)
+              if(proExist!=-1)
+              {
+                db.get().collection(collection.CART).updateOne({'products.item': objectId(proId)},
+                {
+                    $inc:{'products.$.quantity':1}
+                }).then((data)=>{
+                
+                   resolve();
+                  }) 
+              }
+            else{
+
+            
               db.get().collection(collection.CART).updateOne({user:objectId(userId)},
               
-              {
+             {
 
-                    $push:{products:objectId(proId)}
+                    $push:{products:proObj}
                  
               }
               
@@ -74,15 +92,16 @@ addToCart:(proId,userId)=>{
               ) .then((data)=>{
                 
                 console.log(data)
-                resolve();
-              })   
+               resolve();
+              }) 
+            }   
          }
          else{
 
             let cartObj={
 
                 user:objectId(userId),
-                products:[objectId(proId)]
+                products:[proObj]
             }
             db.get().collection(collection.CART).insertOne(cartObj).then((data)=>
             {
@@ -104,37 +123,56 @@ getCartProducts:(userId)=>{
 
         let userCart=await db.get().collection(collection.CART).findOne({user:objectId(userId)})
         if(userCart)
-
-        { db.get().collection(collection.CART).aggregate([
+        {  
+            let cartItem=await db.get().collection(collection.CART).aggregate([
 
              {
                 $match:{user:objectId(userId)}
              },
-             {
 
-                $lookup:{
-                    from:'product',
-                    let:{proList:'$products'},
-                    pipeline:[
-                        {
-                            $match:{
-                                $expr:{
-                                    $in:['$_id',"$$proList"]
-                                }
-                            }
-                        }
-                    ],
+           {
+               $unwind:'$products'
+           },
+           {
+               $project:{
+                item:'$products.item',
+                quantity:'$products.quantity'
+               }
+           },
+           {
+                     $lookup:{
+                        from:collection.PRODUCT,
+                        localField:'item',
+                        foreignField:'_id',
+                        as:'product'
+                     }
+           }
+             //{
 
-                    as:'cartItems'
+               // $lookup:{
+                    //from:'product',
+                   // let:{proList:'$products'},
+                   // pipeline:[
+                      //  {
+                         //   $match:{
+                             //   $expr:{
+                              //      $in:['$_id',"$$proList"]
+                              //  }
+                           // }
+                       // }
+                  //  ],
 
-                }
-             }
+                    //as:'cartItems'
+
+                //}
+            // }
 
 
-         ]).toArray().then((data)=>{
+         ]).toArray()
 
-            resolve(data[0].cartItems)
-         })
+            console.log(cartItem)
+            resolve(cartItem)
+     
     }
 
     else{
@@ -144,10 +182,37 @@ getCartProducts:(userId)=>{
     })
 
 
+},
+
+
+getCartCount:(userId)=>{
+
+    return new Promise(async(resolve,reject)=>{
+        let count=0;
+        let cart=await db.get().collection(collection.CART).findOne({user:objectId(userId)})
+        if(cart)
+        {
+              count=cart.products.length
+        }
+        console.log(count)
+        resolve(count)
+    })
+},
+
+deleteItem:(cartId,proId)=>{
+
+
+    return new Promise(async(resolve,reject)=>{
+
+        let cart= await db.get().collection(collection.CART).updateOne({_id:objectId(cartId)},
+        {
+
+            $pull:{products:{item:objectId(proId)}}
+        })
+
+        resolve()
+    })
+
 }
-
-
-
-
 
 }
