@@ -11,7 +11,7 @@ var db=require('./config/connection')//database connection importing
 var app = express();
 var hbs = expressHbs.create({extname:'hbs',defaultLayout:'layout',layoutsDir:__dirname +'/views/layout/',partialsDir:__dirname+'/views/partials/'});
 var session=require('express-session')
-
+var cors=require('cors')
 
 
 
@@ -26,6 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload());
+app.use(cors)
 
 //connecting to database
 db.connect((err)=>
