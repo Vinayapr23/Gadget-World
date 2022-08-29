@@ -7,7 +7,8 @@ const state={
 module.exports.connect = function(callback)
 {
     //const urllocal='mongodb://localhost:27017'
-    const url='mongodb+srv://vinayaprasad:Vinayaprasad1@cluster0.xtrhbsq.mongodb.net/?retryWrites=true&w=majority'
+    //const url='mongodb+srv://vinayaprasad:Vinayaprasad1@cluster0.xtrhbsq.mongodb.net/?retryWrites=true&w=majority'
+    const url=MONGODB_URI
     const dbname='shopping'
 
     mongoClient.connect(url,(err,data)=>{
