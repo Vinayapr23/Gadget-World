@@ -149,6 +149,7 @@
     opacity: 0.5;
     text-transform: capitalize;
     margin: 5px 0;
+    font-weight:bold
 }
 
 .price{

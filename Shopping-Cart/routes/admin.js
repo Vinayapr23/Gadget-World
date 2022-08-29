@@ -30,7 +30,7 @@ router.post('/add-product', function(req, res) {
     
     let image=req.files.image
     const id = uuidv4();
-    image.mv('./public/product-images/'+id+'.jpg')
+    image.mv('./Shopping-Cart/public/product-images/'+id+'.jpg')
     req.body.imagepath=id;
 
     productHelper.addProduct(req.body,(result)=>{

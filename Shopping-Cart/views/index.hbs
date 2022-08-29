@@ -8,28 +8,28 @@
   </div>
 </header>
 
-<section id="two" >
+<section id="two" style="display:none">
   <div  class="banner-section">
           <h5 class="product-category pt-3" class="banner">Best Sellers</h5>
   </div>
   
 </section>
 
-<section id="three" >
+<section id="three" style="display:none">
   <div class="container mt-5">
     <div class="row">
 
          {{#each products}}
        
-        <div class="product-card col-md-4 align">
+        <div class="product-card col-md-4 mt-5 align">
           <div class="product-image">
-            <img src="/product-images/{{this.imagepath}}.jpg" class="product-thumb" alt="">
-             <button class="card-btn" class="btn btn-secondary" onclick='addToCart("{{this._id}}")'>Add to Cart</button>
+            <img src="../../product-images/{{this.imagepath}}.jpg" class="product-thumb" alt="">
+             <button class="card-btn" class="btn btn-secondary" onclick='addToCart("{{this._id}}")' id="{{this._id}}">Add to Cart</button>
           </div>
           <div class="product-info">
             <h4 class="product-brand">{{this.name}}</h4>
-            <p class="product-short-des">{{this.description}}</p>
-            <span class="price">{{this.price}}</span>
+            <p class="product-short-des" style="font-weight:900px;">{{this.description}}</p>
+            <span class="price">{{this.price}}$</span>
             
           </div>
         </div>
@@ -41,45 +41,21 @@
 </section>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <script>
 
     
-     /* $('#new').on('click', function () {
+      $('#new').on('click', function () {
+      
           $('#two').show('slow');
           $('#three').show('slow');
-          localStorage.menu_selection = '#two';
+          $("#two").css("display", "block");
+           $("#three").css("display", "block");
+            
+
 
 
         });
- type="button" 
-
-        $(function () {
-
-          var menu_selection = localStorage.menu_selection;
-
-          // this assumes that the default display is 'none'
-          $(menu_selection).show('slow')
-
-        });*/
+ 
 
 
   </script>
